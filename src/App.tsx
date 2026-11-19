@@ -1,9 +1,10 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import katex from 'katex'
+import usnLogo from './assets/usn-logo.svg'
 import {
   Activity, ArrowDown, ArrowRight, AudioLines,
-  Check, CircleHelp, Download, ExternalLink, Info,
+  Check, CircleHelp, Download, Info,
   RotateCcw, Waves,
 } from 'lucide-react'
 import Chart from './components/Plot'
@@ -469,7 +470,7 @@ function App() {
   return <LanguageContext.Provider value={language}>{localizeTree((
     <div className="app-shell">
       <header className="topbar">
-        <a className="brand" href="#top" aria-label="Hydroakustikk feltlab, til toppen"><img className="usn-logo" src="/usn-logo.svg" alt="Universitetet i Sørøst-Norge" /><span className="brand-separator" /><span className="top-app-brand"><span className="brand-mark"><AudioLines size={19} /></span><span>HAV<span className="brand-light"> / LAB</span></span></span></a>
+        <a className="brand" href="#top" aria-label="Hydroakustikk feltlab, til toppen"><img className="usn-logo" src={usnLogo} alt="Universitetet i Sørøst-Norge" /><span className="brand-separator" /><span className="top-app-brand"><span className="brand-mark"><AudioLines size={19} /></span><span>HAV<span className="brand-light"> / LAB</span></span></span></a>
         <nav className="top-links" aria-label="Hovednavigasjon"><a href="#propagation">Læreverket</a><a href="#simulator">Simulator</a><a href="#quiz">Oppgaver</a></nav>
         <div className="language-toggle" role="group" aria-label="Velg språk">
           <button type="button" aria-pressed={language === 'no'} onClick={() => setLanguage('no')}>NO</button>
