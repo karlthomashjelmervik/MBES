@@ -168,4 +168,33 @@ export default function ActiveSonar({ language }: { language: Language }) {
         <section className="module-frame sonar-panel">
           <div className="module-header"><div><span className="eyebrow">{language === 'en' ? 'RAY PLOT · 15 KM' : 'STRÅLEPLOTT · 15 KM'}</span><h3>{language === 'en' ? 'Ray paths from selected sonar depth' : 'Strålegang fra valgt sonardybde'}</h3></div><Activity size={17} /></div>
           <div className="chart-area asw-ray-chart">
-            <Chart data={[rayTrace,
+            <Chart data={[rayTrace, ...rayBoundaries]} layout={{
+              margin: { l: 56, r: 18, t: 20, b: 48 },
+              xaxis: { title: language === 'en' ? 'Range (m)' : 'Avstand (m)', range: [0, MAX_RANGE] },
+              yaxis: { title: language === 'en' ? 'Depth (m)' : 'Dybde (m)', range: [WATER_DEPTH, 0] },
+              showlegend: false,
+              shapes: [
+                { type: 'rect', x0: 0, x1: MAX_RANGE, y0: 0, y1: SURFACE_DUCT_MAX_DEPTH, fillcolor: 'rgba(219,101,79,0.08)', line: { width: 0 }, layer: 'below' },
+                { type: 'rect', x0: 0, x1: MAX_RANGE, y0: DEEP_CHANNEL_MIN, y1: DEEP_CHANNEL_MAX, fillcolor: 'rgba(46,139,87,0.10)', line: { width: 0 }, layer: 'below' },
+              ],
+            }} />
+            {detected && <div className="asw-target" style={{ left: `${TARGET_RANGE / MAX_RANGE * 100}%`, top: `${TARGET_DEPTH / WATER_DEPTH * 100}%` }} aria-label={language === 'en' ? 'Submarine in sound channel at 200 m depth' : 'Ubåt i lydkanalen ved 200 meters dybde'}><Submarine detected /></div>}
+          </div>
+          <div className="asw-legend"><span><i className="sonar-channel-dot" /> {language === 'en' ? 'Sound channel' : 'Lydkanal'}</span><span><i className="sonar-source-dot" /> Sonar</span><span><i className="submarine-dot" /> {language === 'en' ? 'Submarine' : 'Ubåt'}</span><span>{language === 'en' ? '31 rays · ±15°' : '31 stråler · ±15°'}</span></div>
+        </section>
+      </div>
+
+      <aside className="asw-briefing">
+        <Info size={16} />
+        <p><strong>{language === 'en' ? 'Sound speed is a tactical factor in ASW.' : 'Lydhastighet er en taktisk faktor i ASW.'}</strong>{' '}
+          {language === 'en'
+            ? 'Temperature, salinity, and pressure shape the sound-speed profile and therefore where the energy is directed. A sonar placed in or near a sound channel can take advantage of sound rays remaining concentrated over greater distances; without knowledge of the profile, the sonar may be placed in an unfavorable layer and the submarine may be harder to detect. During an operation, the profile is therefore measured and updated to support sensor-depth choices and interpretation of coverage. This exercise isolates the importance of the channel; it does not model operational range or real detection probability. Combining the sonar equation with ray-tracing methods can provide an estimate of detection performance.'
+            : 'Temperatur, saltholdighet og trykk former lydhastighetsprofilen og dermed hvor energien ledes. En sonar plassert i eller nær en lydkanal kan utnytte at lydstrålene holdes samlet over større avstander; uten kjennskap til profilen kan sonaren plasseres i et ugunstig lag og ubåten bli vanskeligere å oppdage. I en operasjon måles og oppdateres derfor profilen for å støtte valg av sensordybde og tolkning av dekning. Denne øvelsen isolerer kanalens betydning; den modellerer ikke operativ rekkevidde eller reell deteksjonssannsynlighet. Bruk av sonarlikningen i kombinasjon med strålegangsmetoder kan gi et estimat av deteksjonsytelse.'}</p>
+        <AudioLines size={17} className="asw-note-icon" />
+        <span className="asw-result">{detected
+          ? (language === 'en' ? 'The sonar is in the sound channel around 200 m.' : 'Sonaren er i lydkanalen rundt 200 m.')
+          : (language === 'en' ? 'The sonar is outside the sound channel around 200 m.' : 'Sonaren er utenfor lydkanalen rundt 200 m.')}</span>
+      </aside>
+    </section>
+  ), language)
+}
